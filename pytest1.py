@@ -2,10 +2,12 @@ import unittest
 
 class TestItem(unittest.TestCase):
     def setUp(self):
+        # hoodie 
         self.item = Item(item_id="1",name="Hoodie",category="Clothing",quantity=5,
                          price=75.00,discount=0.0)
 
     def test_update_price(self):
+        # updates price 
         self.item.update_price(80.00)
         self.assertEqual(self.item.price, 80.00)
 
