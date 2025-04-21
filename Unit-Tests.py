@@ -1,6 +1,6 @@
-# test_inventory_system.py
 
-import unittest, os
+import unittest
+import os
 
 class TestSalesLogger(unittest.TestCase):
     def setUp(self):
