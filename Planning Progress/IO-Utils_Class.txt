@@ -1,0 +1,25 @@
+CLASS IOUtils:
+    save_inventory(filename, items):
+        OPEN file in write mode
+        FOR each item in items:
+            WRITE item data in line format
+        CLOSE file
+
+   load_inventory(filename):
+        OPEN file in read mode
+        INITIALIZE empty items dictionary
+        FOR each line in file:
+            PARSE item data
+            CREATE new Item object
+            ADD to items dictionary
+        RETURN items
+
+    save_sales(filename, transactions):
+        OPEN file in write mode
+        FOR each transaction:
+            WRITE transaction data
+        CLOSE file
+
+   load_sales(filename):
+        OPEN file and read transaction data into list
+        RETURN list

@@ -1,0 +1,26 @@
+Class Item:
+	Attributes:
+	item_id :str//or maybe int
+	name : string
+	category: string
+	price: float
+	discount: float (decide to maybe set at default = 0.0)
+
+	Methods:
+	__init__(all attributes):
+		set self.attributes = attributes
+	
+	update_price(update_price):
+		set current price to new price to update it
+
+	update_quanity(amount):
+		set current quanity to new quanity to update it
+
+	apply_discount(discount_rate):
+		discount should be between 0 to 1, give the discount attribute value
+
+	get_total_price():
+		using quanity, price, and discount, calculate the total cost
+
+	__repr__():
+		return all attributes as a tuple//string
