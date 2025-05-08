@@ -1,3 +1,16 @@
+
+"""
+inventory_system.py
+
+Authors: Jordan Xiong, Fechi Iwudyke, Nhandi Nyawela, Jonathan Bui
+Professor: Gaberiel Cruz
+Class: INST326 (Section 0401)
+Due Date: 05_16_2025
+
+Challenges Encountered:
+
+"""
+
 class Item:
     """Represents a single inventory item in the system.
 
@@ -21,7 +34,12 @@ class Item:
             price (float): Price per unit.
             discount (float): Discount rate (0.0 to 1.0). Default is 0.
         """
-      
+        self.item_id = item_id
+        self.name = name
+        self.category = category
+        self.quantity = quantity
+        self.price = price
+        self.discount = discount
 
     def update_price(self, new_price):
         """Updates the price of the item.
@@ -29,7 +47,8 @@ class Item:
         Args:
             new_price (float): The new price to set. Must be non-negative.
         """
-     
+        if new_price >= 0:
+            self.price = new_price
 
     def update_quantity(self, amount):
         """Updates the quantity of the item by the given amount.
@@ -41,7 +60,9 @@ class Item:
         Side effects:
             Modifies the value of quantity.
         """
-       
+        new_quantity = self.quantity + amount
+        if new_quantity >= 0:
+            self.quantity = new_quantity
 
     def apply_discount(self, discount_rate):
         """Applies a discount to the item.
@@ -52,7 +73,8 @@ class Item:
         Side effects:
             Modifies the value of discount.
         """
-        
+        if 0 <= discount_rate <= 1:
+            self.discount = discount_rate
 
     def get_total_price(self):
         """Calculates the effective price after discount.
@@ -60,7 +82,7 @@ class Item:
         Returns:
             float: The discounted price of the item.
         """
-        
+        return self.price * (1 - self.discount)
 
     def to_string(self):
         """Returns a string with a summary of the item's details.
@@ -68,7 +90,9 @@ class Item:
         Returns:
             str: Summary string with ID, name, price, and other details.
         """
-        
+        return (f"ID: {self.item_id}, Name: {self.name}, Category: {self.category}, "
+                f"Quantity: {self.quantity}, Price: ${self.price:.2f}, "
+                f"Discount: {self.discount * 100:.0f}%, Total Price: ${self.get_total_price():.2f}")
 class InventoryManager:
     """Manages a collection of inventory items.
 
@@ -78,18 +102,19 @@ class InventoryManager:
 
     def __init__(self):
         """Initializes an empty inventory."""
-
+        self.items = {}
 
     def add_item(self, item):
         """Adds a new item to the inventory.
-
+        
         Args:
             item (Item): The item to add.
 
         Side effects:
             Modifies the items dictionary.
         """
-
+        if item.item_id not in self.items:
+            self.items[item.item_id] = item
 
     def remove_item(self, item_id):
         """Removes an item from the inventory by ID.
@@ -100,7 +125,9 @@ class InventoryManager:
         Side effects:
             Modifies the items dictionary.
         """
- 
+        if item_id in self.items:
+            del self.items[item_id]
+
 
     def update_item(self, item_id, attribute, value):
         """Updates a specific attribute of an item.
@@ -113,7 +140,14 @@ class InventoryManager:
         Side effects:
             Modifies the corresponding attribute of the Item.
         """
- 
+        if item_id in self.items:
+            item = self.items[item_id]
+            if attribute == 'price':
+                item.update_price(value)
+            elif attribute == 'quantity':
+                item.update_quantity(value)
+            elif attribute == 'discount':
+                item.apply_discount(value)
 
     def search_items(self, keyword):
         """Searches for items by keyword in their name or category.
@@ -124,6 +158,11 @@ class InventoryManager:
         Returns:
             list of Item: Matching items.
         """
+        result = []
+        for item in self.items.values():
+            if keyword.lower() in item.name.lower() or keyword.lower() in item.category.lower():
+                result.append(item)
+        return result
     
     def display_summary(self):
         """Displays a summary of the inventory.
@@ -131,13 +170,20 @@ class InventoryManager:
         Returns:
             dict: Summary including total number of items and total value.
         """
-        
+        total_items = len(self.items)
+        total_value = sum(item.get_total_price() * item.quantity for item in self.items.values())
+        return {
+            'total_items': total_items,
+            'total_value': total_value
+        }
     def get_all_items(self):
         """Returns all items in the inventory.
 
         Returns:
             list of Item: All inventory items.
         """
+        return list(self.items.values())
+    
 class SalesLogger:
     """Logs and stores sales transactions.
 
