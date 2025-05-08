@@ -1,0 +1,24 @@
+CLASS SalesLogger:
+    Attributes:
+        transactions: list of dictionaries
+
+    __init__():
+        SET transactions to empty list
+
+    log_sale(item_id, quantity_sold, price_per_item):
+        CREATE transaction dictionary with:
+            - item_id
+            - quantity_sold
+            - total_price = quantity_sold * price_per_item
+            - timestamp = current time
+        ADD transaction to transactions
+        PRINT "Sale recorded"
+
+    get_sales_report():
+        SET total_revenue = 0
+        FOR each transaction in transactions:
+            ADD transaction['total_price'] to total_revenue
+        RETURN summary string of total revenue and transaction count
+
+    get_transactions():
+        RETURN list of all transactions

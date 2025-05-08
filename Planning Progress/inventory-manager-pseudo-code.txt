@@ -1,0 +1,33 @@
+Class InventoryManager:
+	Attributes:
+		items: dict mapping to item_id to Item
+
+	__init__():
+		item = []
+
+	add_item(item):
+		if an item is not in the dict, add it to the item dict
+	
+	remove_item(item_id):
+		if the item dict has a item with an id of what were searching for, pop off or delete the item it is
+
+	update_item(item_id, attribute, value):
+		if item_id is in items, get the item.
+		if youre updating price, call update_price
+		if youre updating quantity, call update_quantity
+		if youre applying a discount, call apply_discount
+		
+	search_item(keyword):
+		SET result = empty list
+        	FOR each item in items:
+                IF keyword in item.name or keyword in item.category:
+                ADD item to result
+        	RETURN result
+
+	display_summary():
+        	SET total_items = number of items
+        	SET total_value = sum of (item.price * item.quantity) for all items
+        	PRINT total_items and total_value
+
+	get_all_items():
+        	RETURN list of all items
