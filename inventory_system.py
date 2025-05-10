@@ -10,6 +10,7 @@ Due Date: 05_16_2025
 Challenges Encountered:
 
 """
+from datetime import datetime
 
 class Item:
     """Represents a single inventory item in the system.
@@ -194,7 +195,8 @@ class SalesLogger:
 
     def __init__(self):
         """Initializes an empty sales log."""
-      
+        self.transactions = []
+    
 
     def log_sale(self, item_id, quantity_sold, price_per_item):
         """Records a new sale.
@@ -207,6 +209,13 @@ class SalesLogger:
         Side effects:
             Appends a transaction to the internal transaction log.
         """
+        transaction = {
+            'item_id': item_id,
+            'quantity_sold': quantity_sold,
+            'total_price': quantity_sold * price_per_item,
+            'timestamp': datetime.now().isoformat()
+        }
+        self.transactions.append(transaction)
      
 
     def get_sales_report(self):
@@ -215,6 +224,8 @@ class SalesLogger:
         Returns:
             str: Report showing number of transactions and total revenue.
         """
+        total_revenue = sum(t['total_price'] for t in self.transactions)
+        return f"Total transactions: {len(self.transactions)}, Total revenue: ${total_revenue:.2f}"
      
 
     def get_transactions(self):
@@ -223,6 +234,7 @@ class SalesLogger:
         Returns:
             list of dict: Sales transactions.
         """
+        return self.transactions
     
 class IOUtils:
     """Handles reading and writing inventory and sales data to files."""
@@ -237,6 +249,10 @@ class IOUtils:
         Side effects:
             Creates or overwrites a file.
         """
+        with open(filename, 'w') as file:
+            for item in items.values():
+                line = f"{item.item_id},{item.name},{item.category},{item.quantity},{item.price},{item.discount}\n"
+                file.write(line)
     
     def load_inventory(filename):
         """Loads inventory from a file.
@@ -247,7 +263,21 @@ class IOUtils:
         Returns:
             dict of str: Item: Reconstructed items from file.
         """
-
+        items = {}
+        with open(filename, 'r') as file:
+            for line in file:
+                parts = line.strip().split(',')
+                if len(parts) == 6:
+                    item_id, name, category, quantity, price, discount = parts
+                    items[item_id] = Item(
+                        item_id=item_id,
+                        name=name,
+                        category=category,
+                        quantity=int(quantity),
+                        price=float(price),
+                        discount=float(discount)
+                    )
+        return items
 
   
     def save_sales(filename, transactions):
@@ -260,6 +290,10 @@ class IOUtils:
         Side effects:
             Creates or overwrites a file.
         """
+        with open(filename, 'w') as file:
+            for transaction in transactions:
+                line = f"{transaction['item_id']},{transaction['quantity_sold']},{transaction['total_price']},{transaction['timestamp']}\n"
+                file.write(line)
     
 
     def load_sales(filename):
@@ -271,3 +305,14 @@ class IOUtils:
         Returns:
             list of dict: Parsed transaction records.
         """
+        transactions = []
+        with open(filename, 'r') as file:
+            for line in file:
+                item_id, quantity_sold, total_price, timestamp = line.strip().split(',')
+                transactions.append({
+                    'item_id': item_id,
+                    'quantity_sold': int(quantity_sold),
+                    'total_price': float(total_price),
+                    'timestamp': timestamp
+                })
+        return transactions
