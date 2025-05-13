@@ -239,6 +239,7 @@ class SalesLogger:
 class IOUtils:
     """Handles reading and writing inventory and sales data to files."""
 
+    @staticmethod
     def save_inventory(filename, items):
         """Saves inventory to a file.
 
@@ -254,6 +255,7 @@ class IOUtils:
                 line = f"{item.item_id},{item.name},{item.category},{item.quantity},{item.price},{item.discount}\n"
                 file.write(line)
     
+    @staticmethod
     def load_inventory(filename):
         """Loads inventory from a file.
 
@@ -279,7 +281,7 @@ class IOUtils:
                     )
         return items
 
-  
+    @staticmethod
     def save_sales(filename, transactions):
         """Saves sales data to a file.
 
@@ -295,7 +297,7 @@ class IOUtils:
                 line = f"{transaction['item_id']},{transaction['quantity_sold']},{transaction['total_price']},{transaction['timestamp']}\n"
                 file.write(line)
     
-
+    @staticmethod
     def load_sales(filename):
         """Loads sales data from a file.
 
