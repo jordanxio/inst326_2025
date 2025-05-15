@@ -346,7 +346,7 @@ class IOUtils:
         with open(filename, 'w') as file:
             for transaction in transactions:
                  #converts the transaction dict to a CSV line
-                line = f"{transaction['item_id']},{transaction['quantity_sold']},{transaction['total_price']},{transaction['timestamp']}\n"
+                line = f"{transaction['item_id']},{transaction['quantity_sold']},{transaction['price_per_item']},{transaction['total_price']},{transaction['timestamp']}\n"
                 file.write(line)
     
     @staticmethod
