@@ -1,6 +1,6 @@
 **Inventory Management System**
 
-A command-line application for managing inventory and logging sales in a department store setting. Built using object-oriented principles and modular design.
+A command-line application for managing inventory and logging sales in a department store setting. This system is built using object-oriented principles and modular design.
 
 
 **Features**
@@ -8,11 +8,11 @@ A command-line application for managing inventory and logging sales in a departm
 
   - Search items by keyword
 
-  - Apply discounts
+  - Apply discounts to individual items
 
-  - Log sales transactions
+  - Log and track sales transactions
 
-  - Display inventory summaries
+  - Display inventory summaries and sales reports
 
   - Save/load inventory and sales data from files
 
