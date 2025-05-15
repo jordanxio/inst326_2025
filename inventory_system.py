@@ -364,7 +364,7 @@ class IOUtils:
         with open(filename, 'r') as file:
             for line in file:
                 #split each line into fields
-                item_id, quantity_sold, total_price, timestamp = line.strip().split(',')
+                item_id, quantity_sold,price_per_item, total_price, timestamp = line.strip().split(',')
                 
                 #creats a dictionary from the data and append it to the list
                 transactions.append({
