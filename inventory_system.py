@@ -370,6 +370,7 @@ class IOUtils:
                 transactions.append({
                     'item_id': item_id,
                     'quantity_sold': int(quantity_sold),
+                    'price_per_item': float(price_per_item),
                     'total_price': float(total_price),
                     'timestamp': timestamp
                 })
