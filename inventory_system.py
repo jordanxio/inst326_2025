@@ -7,9 +7,14 @@ Professor: Gaberiel Cruz
 Class: INST326 (Section 0401)
 Due Date: 05_16_2025
 
-Challenges Encountered:
+Challenges Encountered: Had a hard time trying to work with OOP in a real world application for data handling.
+This code had basically no rubric or limitations so it made it hard to pin point what we wanted, what to do, how to it, etc.
+Two different type of file handling with Sales Logger and Inventory management. That being said, those two were the hardest
+classes to work with. With the help of knowing Unity//C# in earlier courses, the main.py was easier to work around
+such as calling functions and working with handling. 
 
 """
+#importing the datetime module to record sale timestamps later (this is the only thing we are importing)
 from datetime import datetime
 
 class Item:
@@ -40,6 +45,8 @@ class Item:
         self.category = category
         self.quantity = quantity
         self.price = price
+
+        #value from 0 to 1 (so for example, 0.20 means 20% off)
         self.discount = discount
 
     def update_price(self, new_price):
@@ -49,7 +56,9 @@ class Item:
             new_price (float): The new price to set. Must be non-negative.
         """
         if new_price >= 0:
-            self.price = new_price
+            #sets the new price
+            self.price = new_price 
+        #if the new price is negative, we don't change anything
 
     def update_quantity(self, amount):
         """Updates the quantity of the item by the given amount.
@@ -63,6 +72,7 @@ class Item:
         """
         new_quantity = self.quantity + amount
         if new_quantity >= 0:
+            #update and replace
             self.quantity = new_quantity
 
     def apply_discount(self, discount_rate):
@@ -75,6 +85,7 @@ class Item:
             Modifies the value of discount.
         """
         if 0 <= discount_rate <= 1:
+            #update and replace
             self.discount = discount_rate
 
     def get_total_price(self):
@@ -85,6 +96,7 @@ class Item:
         """
         return self.price * (1 - self.discount)
 
+    #similar to a repo, but bc im familiar with java we will just use something like a ToString
     def to_string(self):
         """Returns a string with a summary of the item's details.
 
@@ -94,6 +106,7 @@ class Item:
         return (f"ID: {self.item_id}, Name: {self.name}, Category: {self.category}, "
                 f"Quantity: {self.quantity}, Price: ${self.price:.2f}, "
                 f"Discount: {self.discount * 100:.0f}%, Total Price: ${self.get_total_price():.2f}")
+        
 class InventoryManager:
     """Manages a collection of inventory items.
 
@@ -102,7 +115,11 @@ class InventoryManager:
     """
 
     def __init__(self):
-        """Initializes an empty inventory."""
+        """Initializes an empty inventory.
+         Args:
+            self (object): The item object being initialize.
+        """
+        #empty
         self.items = {}
 
     def add_item(self, item):
@@ -114,7 +131,9 @@ class InventoryManager:
         Side effects:
             Modifies the items dictionary.
         """
+        #checks if the item ID is not already in the inventory
         if item.item_id not in self.items:
+            #add to dict
             self.items[item.item_id] = item
 
     def remove_item(self, item_id):
@@ -141,8 +160,10 @@ class InventoryManager:
         Side effects:
             Modifies the corresponding attribute of the Item.
         """
+        #checks that the item exists in the inventory
         if item_id in self.items:
             item = self.items[item_id]
+            #uses the appropriate method based on attribute name
             if attribute == 'price':
                 item.update_price(value)
             elif attribute == 'quantity':
@@ -160,9 +181,12 @@ class InventoryManager:
             list of Item: Matching items.
         """
         result = []
+        #loops through all items in the inventory
         for item in self.items.values():
+             #checks if keyword is in the name or category (case-insensitive)
             if keyword.lower() in item.name.lower() or keyword.lower() in item.category.lower():
                 result.append(item)
+        #adds the item to the result list
         return result
     
     def display_summary(self):
@@ -173,6 +197,7 @@ class InventoryManager:
         """
         total_items = len(self.items)
         total_value = sum(item.get_total_price() * item.quantity for item in self.items.values())
+        #total value = discounted price × quantity
         return {
             'total_items': total_items,
             'total_value': total_value
@@ -183,6 +208,7 @@ class InventoryManager:
         Returns:
             list of Item: All inventory items.
         """
+        #converts dictionary values to a list
         return list(self.items.values())
     
 class SalesLogger:
@@ -213,6 +239,7 @@ class SalesLogger:
             'item_id': item_id,
             'quantity_sold': quantity_sold,
             'total_price': quantity_sold * price_per_item,
+            #current date and time in standard format
             'timestamp': datetime.now().isoformat()
         }
         self.transactions.append(transaction)
@@ -224,6 +251,7 @@ class SalesLogger:
         Returns:
             str: Report showing number of transactions and total revenue.
         """
+        #calc total revenue by adding up all the 'total_price' values
         total_revenue = sum(t['total_price'] for t in self.transactions)
         return f"Total transactions: {len(self.transactions)}, Total revenue: ${total_revenue:.2f}"
      
@@ -234,10 +262,18 @@ class SalesLogger:
         Returns:
             list of dict: Sales transactions.
         """
+        
         return self.transactions
     
 class IOUtils:
-    """Handles reading and writing inventory and sales data to files."""
+    """Handles reading and writing inventory and sales data to files.
+    
+    What is a @staticmethod:
+    Static methods in Python are methods that belong to a class rather than an instance of the class.
+    They are defined using the @staticmethod decorator and do not require an instance of the class to be called.
+    Static methods do not have access to the instance (self) or class (cls) variables and are used when some functionality
+    is related to the class but does not need to access or modify the class or instance state.
+    """
 
     @staticmethod
     def save_inventory(filename, items):
@@ -250,9 +286,13 @@ class IOUtils:
         Side effects:
             Creates or overwrites a file.
         """
+        # Open the file in write mode ('w') which erases existing content
         with open(filename, 'w') as file:
+            #goes through each item in the inventory
             for item in items.values():
+                #format the item data into one line of comma-separated values
                 line = f"{item.item_id},{item.name},{item.category},{item.quantity},{item.price},{item.discount}\n"
+                #writes the line to the file
                 file.write(line)
     
     @staticmethod
@@ -265,16 +305,25 @@ class IOUtils:
         Returns:
             dict of str: Item: Reconstructed items from file.
         """
+        #creates an empty dictionary to hold the items we load
         items = {}
+        
+        #opening the file in read mode ('r')
         with open(filename, 'r') as file:
             for line in file:
+                
+                #removing any whitespace at the end of the line and split by commas
                 parts = line.strip().split(',')
                 if len(parts) == 6:
+                    #assign each part to a variable
                     item_id, name, category, quantity, price, discount = parts
+
+                    #create a new Item using the loaded data
                     items[item_id] = Item(
                         item_id=item_id,
                         name=name,
                         category=category,
+                        #convert datatype
                         quantity=int(quantity),
                         price=float(price),
                         discount=float(discount)
@@ -292,8 +341,10 @@ class IOUtils:
         Side effects:
             Creates or overwrites a file.
         """
+        #opens the file for writing
         with open(filename, 'w') as file:
             for transaction in transactions:
+                 #converts the transaction dict to a CSV line
                 line = f"{transaction['item_id']},{transaction['quantity_sold']},{transaction['total_price']},{transaction['timestamp']}\n"
                 file.write(line)
     
@@ -308,9 +359,13 @@ class IOUtils:
             list of dict: Parsed transaction records.
         """
         transactions = []
+        #opens the file in read mode
         with open(filename, 'r') as file:
             for line in file:
+                #split each line into fields
                 item_id, quantity_sold, total_price, timestamp = line.strip().split(',')
+                
+                #creats a dictionary from the data and append it to the list
                 transactions.append({
                     'item_id': item_id,
                     'quantity_sold': int(quantity_sold),
