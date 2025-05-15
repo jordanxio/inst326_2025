@@ -238,6 +238,7 @@ class SalesLogger:
         transaction = {
             'item_id': item_id,
             'quantity_sold': quantity_sold,
+            'price_per_item': price_per_item,
             'total_price': quantity_sold * price_per_item,
             #current date and time in standard format
             'timestamp': datetime.now().isoformat()
